@@ -118,9 +118,12 @@ unsafe extern "system" fn keybd_proc(code: c_int, w_param: WPARAM, l_param: LPAR
                     spawn(move || cb());
                 }
                 Bind::BlockableBind(cb) => {
-                    if let BlockInput::Block = cb() {
-                        return 1;
-                    }
+                    let cb = Arc::clone(cb);
+                    spawn(move || cb());
+                    return 1;
+                    //if let BlockInput::Block = cb() {
+                    //    return 1;
+                    //}
                 }
             }
         }
@@ -153,12 +156,9 @@ unsafe extern "system" fn mouse_proc(code: c_int, w_param: WPARAM, l_param: LPAR
                     spawn(move || cb());
                 }
                 Bind::BlockableBind(cb) => {
-                    let cb = Arc::clone(cb);
-                    spawn(move || cb());
-                    return;
-                    // if let BlockInput::Block = cb() {
-                    //    return 1;
-                    // }
+                    if let BlockInput::Block = cb() {
+                       return 1;
+                    }
                 }
             }
         };
