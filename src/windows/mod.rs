@@ -155,7 +155,7 @@ unsafe extern "system" fn mouse_proc(code: c_int, w_param: WPARAM, l_param: LPAR
                 Bind::BlockableBind(cb) => {
                     let cb = Arc::clone(cb);
                     spawn(move || cb());
-                    1
+                    ()
                     // if let BlockInput::Block = cb() {
                     //    return 1;
                     // }
